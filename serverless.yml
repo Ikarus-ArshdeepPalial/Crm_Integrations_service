@@ -1,0 +1,51 @@
+service: crm-connector
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: ap-south-1
+  timeout: 29
+  environment:
+    SECRET_TOKEN: ${env:SECRET_TOKEN} 
+    APP_ENCRYPTION_KEY: ${env:APP_ENCRYPTION_KEY}
+    DYNAMODB_TABLE: ${env:DYNAMODB_TABLE}
+
+  iam:
+    role: ${env:CRM_ROLE}
+          
+functions:
+  api:
+    handler: main.handler
+    events:
+      - http:
+          path: /
+          method: any
+      - http:
+          path: /{proxy+}
+          method: any
+
+plugins:
+  - serverless-python-requirements
+  - serverless-dotenv-plugin
+  - serverless-prune-plugin
+
+package:
+  patterns:
+    - '!env/**'
+    - '!node_modules/**'
+    - '!.serverless/**'
+    - '!__pycache__/**'
+    - '!.env'
+    - '!package.json'
+    - '!package-lock.json'
+
+custom:
+
+  prune:
+    automatic: true
+    number: 5
+
+  pythonRequirements:
+    dockerizePip: true
+    layer: false

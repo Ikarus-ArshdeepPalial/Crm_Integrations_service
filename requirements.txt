@@ -1,0 +1,11 @@
+pydantic[email]>=1.10.0,<2.0
+requests
+simple-salesforce
+python-dotenv
+fastapi
+uvicorn
+mangum
+email-validator
+boto3
+dnspython
+pycryptodomex
